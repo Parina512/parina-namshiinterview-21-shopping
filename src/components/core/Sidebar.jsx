@@ -1,34 +1,73 @@
 import React, { useEffect, useState } from 'react';
-import { getCategories } from './../axios/item-api';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCategoryList, updateItemList } from '../actions/item-actions';
+import '../core/css/Sidebar.css';
+import { getCategories, getProductForCategory } from './../axios/item-api';
+import List from './List';
 
-const Sidebar = ({ handleCategoryClick }) => {
-  // const categories = ['all', 'bird', 'cat', 'dog', 'fish'];
-  const [categories, setCategory] = useState([]);
+const Sidebar = () => {
+  const categories = useSelector((store) => store?.item?.categoryList ?? []);
+  const productList = useSelector(
+    (store) => store?.item?.selectedCategoryProducts ?? []
+  );
+  console.log(productList, '=======');
+  const [selCategories, setSelCategory] = useState(0);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     async function getCategoryList() {
       const categories = await getCategories();
-      setCategory(categories);
+      dispatch(addCategoryList(categories));
     }
     getCategoryList();
   }, []);
 
+  const fetchProductData = async (category) => {
+    console.log('========here');
+    const res = await getProductForCategory(category);
+    dispatch(updateItemList(res));
+  };
   return (
-    <div>
-      <div>Categories</div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {categories?.map((item) => {
+    <>
+      <div class='tab'>
+        {categories?.map((category, index) => {
           return (
-            <div
-              style={{ padding: '5px', textAlign: 'left' }}
-              onClick={() => handleCategoryClick(item)}
+            <button
+              class='tablinks'
+              onClick={() => {
+                fetchProductData(category);
+                setSelCategory(index);
+              }}
             >
-              {item}
-            </div>
+              {category}
+            </button>
           );
         })}
       </div>
-    </div>
+
+      <div id={selCategories} class='tabcontent'>
+        <List productList={productList} />
+      </div>
+    </>
   );
+
+  // return (
+  //   <div>
+  //     <div>Categories</div>
+  //     <div style={{ display: 'flex', flexDirection: 'column' }}>
+  //       {categories?.map((item) => {
+  //         return (
+  //           <div
+  //             style={{ padding: '5px', textAlign: 'left' }}
+  //             onClick={() => handleCategoryClick(item)}
+  //           >
+  //             {item}
+  //           </div>
+  //         );
+  //       })}
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default Sidebar;

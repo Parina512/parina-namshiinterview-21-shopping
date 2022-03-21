@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
-import { getProductForCategory } from './../axios/item-api';
+import React from 'react';
 import Cart from './Cart';
-import List from './List';
 import Sidebar from './Sidebar';
 
 const Layout = () => {
-  const [productList, setProductList] = useState([]);
-  const handleCategoryClick = async (item) => {
-    const res = await getProductForCategory(item);
-    setProductList(res);
-  };
   return (
     <>
       <div style={{ backgroundColor: 'red', fontSize: '20px', padding: '5px' }}>
@@ -22,8 +15,7 @@ const Layout = () => {
           margin: '20px',
         }}
       >
-        <Sidebar handleCategoryClick={handleCategoryClick} />
-        <List productList={productList} />
+        <Sidebar />
         <Cart />
       </div>
     </>

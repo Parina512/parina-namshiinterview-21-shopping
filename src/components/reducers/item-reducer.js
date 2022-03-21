@@ -1,4 +1,8 @@
-import { ADD_ITEM_LIST, ADD_TO_CART } from '../actions/action-types';
+import {
+  ADD_CATEGORY_LIST,
+  ADD_ITEM_LIST,
+  ADD_TO_CART,
+} from '../actions/action-types';
 
 const initialState = [];
 
@@ -9,7 +13,10 @@ const itemReducer = (state = initialState, action) => {
       const newFilter = { ...filter, ...action.payload };
       return { ...state, filter: newFilter };
     case ADD_ITEM_LIST:
-      return { ...state, availablePropertyList: action.payload };
+      return { ...state, selectedCategoryProducts: action.payload };
+    case ADD_CATEGORY_LIST:
+      return { ...state, categoryList: action.payload };
+
     default:
       return state;
   }

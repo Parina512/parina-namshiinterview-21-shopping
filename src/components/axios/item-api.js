@@ -12,6 +12,7 @@ export async function getCategories() {
 export async function getProductForCategory(category) {
   try {
     const res = await axiosGet(`products/category/${category}`);
+    console.log('=======res category', res, category);
     return res;
   } catch (error) {
     console.log(`product fetching for ${category}` + error);
